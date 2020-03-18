@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    
+    <xsd:simpleType name="ProductShortNameType">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="6"/>
+            <xsd:pattern value="[a-zA-Z]{2}[0-9]{4}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:complexType name="LineItemType">
+        <xsd:sequence>
+            <xsd:element name="unitPrice" type="xsd:float"/>
+            <xsd:element name="quantity" type="xsd:integer"/>
+        </xsd:sequence>
+        <xsd:attribute name="forProduct" type="xsd:IDREF"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="InvoiceType">
+        <xsd:sequence>
+            <xsd:element name="orderDate" type="xsd:date"/>
+            <xsd:element name="shipDate" type="xsd:date"/>
+            <xsd:element name="lineItem" type="LineItemType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="ProductType">
+        <xsd:sequence>
+            <xsd:element name="productDescription" type="xsd:string"/>
+        </xsd:sequence>
+        <xsd:attribute name="productShortName" type="ProductShortNameType"/>
+        <xsd:attribute name="productID" type="xsd:ID"/>
+    </xsd:complexType>
+    
+    <xsd:element name="ORDERDATA">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="Invoice" type="InvoiceType" minOccurs="1" maxOccurs="unbounded"/>
+                <xsd:element name="Product" type="ProductType" minOccurs="1" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
