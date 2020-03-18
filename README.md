@@ -1,2 +1,6 @@
-# UDBXML
-Repository for Unstructured Databases and XML course
+# Неструктурирани бази на податоци и XML
+
+Репозиториум за предметот Неструктурирани бази на податоци и XML. 
+
+### Поставки 
+- Инсталација на Oxygen XML: https://www.oxygenxml.com/download.html
