@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    
+    <xsd:simpleType name="NameType">
+        <xsd:restriction base="xsd:string">
+            <xsd:length value="6"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    
+    <xsd:simpleType name="UsernameType">
+        <xsd:restriction base="NameType">
+            <xsd:pattern value="^[a-zA-Z]{4}[0-9]{2}$"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    
+    <xsd:complexType name="episodeType">
+        <xsd:sequence>
+            <xsd:element name="episodeName" type="NameType"/>
+        </xsd:sequence>
+        <xsd:attribute name="episodeID" type="xsd:ID"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="seriesType">
+        <xsd:sequence>
+            <xsd:element name="seriesName" type="NameType"/>
+            <xsd:element name="episode" type="episodeType" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="seriesId" type="xsd:ID"/>
+    </xsd:complexType>
+    
+    
+    <xsd:complexType name="watchlistType">
+        <xsd:sequence>
+            <xsd:element name="timeWatched" type="xsd:time"/>
+        </xsd:sequence>
+        <xsd:attribute name="episodesRef" type="xsd:IDREF"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="userType">
+        <xsd:sequence>
+            <xsd:element name="username" type="UsernameType"/>
+            <xsd:element name="watchlist" type="watchlistType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="userID" type="xsd:ID"/>
+    </xsd:complexType>
+    
+    <xsd:element name="MOVIESAPP">
+        <xsd:sequence>
+            <xsd:element name="User" type="userType" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="Series" type="seriesType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:element>
+    
+</xsd:schema>
