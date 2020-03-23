@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    
+    <xsd:simpleType name="TARIFATYPE">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="prva"/>
+            <xsd:enumeration value="vtora"/>
+            <xsd:enumeration value="treta"/>
+            <xsd:enumeration value="ostanato"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="EMAILTYPE">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="^\w{3,20}@[a-zA-Z0-9\-]{3,15}(\.[a-zA-Z]{3,10}){1,5}$"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:complexType name="KONTAKTTYPE">
+        <xsd:sequence>
+            <xsd:element name="Ime" type="xsd:string"/>
+            <xsd:element name="Prezime" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:group name="OSNOVNIINFO">
+        <xsd:sequence>
+            <xsd:element name="Kontakt" type="KONTAKTTYPE"/>
+            <xsd:element name="email" type="EMAILTYPE"/>
+            <xsd:element name="adresa" type="xsd:string"/>
+        </xsd:sequence>
+        <xsd:attribute name="vrabotenID" type="xsd:ID"/> 
+    </xsd:group>
+    
+    <xsd:element name="VRABOTENI">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="Vraboten" minOccurs="1" maxOccurs="unbounded">
+                    <xsd:complexType>
+                        <xsd:group ref="OSNOVNIINFO"/>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="Inzeneri" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:group ref="OSNOVNIINFO"/>
+                            <xsd:element name="Tarifa" type="TARIFATYPE"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

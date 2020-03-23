@@ -1,0 +1,7 @@
+<!ELEMENT KLIENTI (KLIENT+) >
+<!ELEMENT KLIENT ((Ime | Kontakt), Adresa?, Telefon*) >
+<!ELEMENT Ime (#PCDATA) >
+<!ELEMENT Kontakt (Ime,Prezime)>
+<!ELEMENT Prezime (#PCDATA) >
+<!ELEMENT Adresa (#PCDATA) >
+<!ELEMENT Telefon (#PCDATA)>

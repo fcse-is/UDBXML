@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="https://www.w3.org/2001/XMLSchema">
+    
+    <xsd:simpleType name="TELTYPE">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="^0[0-9]{2}/[0-9]{4}-[0-9]{3}$"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="TELLIST">
+        <xsd:list itemType="TELTYPE"/>
+    </xsd:simpleType>
+    
+    <xsd:complexType name="KONTAKTTYPE">
+        <xsd:sequence>
+            <xsd:element name="Ime" type="xsd:string"/>
+            <xsd:element name="Prezime" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    
+    <xsd:complexType name="KLIENTTYPE">
+        <xsd:sequence>
+            <xsd:choice>
+                <xsd:sequence>
+                    <xsd:element name="Kontakt" type="KONTAKTTYPE"/>
+                </xsd:sequence>
+                <xsd:sequence>
+                    <xsd:element name="Ime" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:choice>
+            <xsd:element name="Adresa" type="xsd:string"/>
+            <xsd:element name="Telefoni" type="TELLIST"/>
+        </xsd:sequence>
+        <xsd:attribute name="klientID" type="xsd:ID"/>
+    </xsd:complexType>
+    
+    <xsd:element name="KLIENTI">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="Klient" type="KLIENTTYPE" minOccurs="1" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

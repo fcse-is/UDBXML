@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    
+    <xsd:simpleType name="TARIFATYPE">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="prva"/>
+            <xsd:enumeration value="vtora"/>
+            <xsd:enumeration value="treta"/>
+            <xsd:enumeration value="ostanato"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="OPISTYPE">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="^(OP|US|RR|DN|RB)[0-9]{3}$"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    
+    <xsd:complexType name="TROSOCITYPE">
+        <xsd:sequence>
+            <xsd:element name="datum" type="xsd:date"/>
+            <xsd:element name="opis" type="OPISTYPE"/>
+            <xsd:element name="suma" type="xsd:decimal"/>
+        </xsd:sequence>
+        <xsd:attribute name="vrabotenREF" type="xsd:integer"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="RABSAATTYPE">
+        <xsd:sequence>
+            <xsd:element name="datum" type="xsd:date"/>
+            <xsd:element name="opis" type="OPISTYPE"/>
+            <xsd:element name="brSaati" type="xsd:integer"/>
+            <xsd:element name="tarifa" type="TARIFATYPE"/>
+            <xsd:element name="rabZadaca" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="vrabotenREF" type="xsd:integer"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="PROEKTTYPE">
+        <xsd:sequence>
+            <xsd:choice>
+                <xsd:element name="plakjanje1" type="xsd:integer" minOccurs="1" maxOccurs="1"/>
+                <xsd:element name="plakjanje6" type="xsd:integer" minOccurs="6" maxOccurs="6"/>
+                <xsd:element name="plakjanje12" type="xsd:integer" minOccurs="12" maxOccurs="12"/>
+            </xsd:choice>
+            <xsd:element name="RabSaati" type="RABSAATTYPE" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="Trosoci" type="TROSOCITYPE" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="rakovoditelREF" type="xsd:integer"/>
+        <xsd:attribute name="klientREF" type="xsd:integer"/>
+    </xsd:complexType>
+    
+    <xsd:element name="PROEKTI">
+        <xsd:sequence>
+            <xsd:element name="Proekt" type="PROEKTTYPE" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:element>
+    
+</xsd:schema>
