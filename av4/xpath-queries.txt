@@ -1,0 +1,32 @@
+1.
+fn:doc("knigi.xml")//KNIGA/Naslov
+
+/KNIGI/KNIGA/Naslov
+
+
+2.
+/KNIGI/KNIGA[3]
+
+
+3.
+/KNIGI/KNIGA[count(PRIMEROK) > 0]/Naslov
+
+
+4.
+fn:doc("knigi.xml")//KNIGA/PRIMEROK[Opis ge "Tvrdi korici"]
+
+
+5.
+fn:doc("knigi.xml")//KNIGA/AVTOR[year-from-date(current-date()) - GodRag > 50]//Ime
+
+
+6.
+fn:doc("knigi.xml")//KNIGA[count(AVTOR) > 1]
+
+
+7.
+count(fn:doc("knigi.xml")//KNIGA[@ISBN = "1423901134"]/PRIMEROK)
+
+
+8.
+fn:doc("knigi.xml")//KNIGA[BrStr = fn:doc("knigi.xml")//KNIGA[@ISBN = "1423901134"]/BrStr] [@ISBN ne "1423901134"]/Naslov

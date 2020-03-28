@@ -52,9 +52,12 @@
     </xsd:complexType>
     
     <xsd:element name="PROEKTI">
-        <xsd:sequence>
-            <xsd:element name="Proekt" type="PROEKTTYPE" minOccurs="1" maxOccurs="unbounded"/>
-        </xsd:sequence>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="Proekt" type="PROEKTTYPE" minOccurs="1" maxOccurs="unbounded"/>
+			</xsd:sequence>
+		</xsd:complexType>
+        
     </xsd:element>
     
 </xsd:schema>
