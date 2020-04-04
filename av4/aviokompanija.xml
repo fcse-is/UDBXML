@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    
+    <xsd:complexType name="PoletuvanjeType">
+        <xsd:sequence>
+            <xsd:element name="datum" type="xsd:date"/>
+            <xsd:element name="rezervacija" type="rezervacijaType"/>
+            <xsd:element name="ekipazREF" type="xsd:integer" minOccurs="3" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="sifra" type="xsd:ID"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="LetType">
+        <xsd:sequence>
+            <xsd:element name="startGrad" type="xsd:string"/>
+            <xsd:element name="kraenGrad" type="xsd:string"/>
+            <xsd:element name="startTime" type="xsd:time"/>
+            <xsd:element name="endTime" type="xsd:time"/>
+            <xsd:element name="poletuvanje" type="PoletuvanjeType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="sifra" type="xsd:ID"/>
+    </xsd:complexType>
+    
+    <xsd:simpleType name="telefonType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="07([0-2] | [5-8])/[0-9]{3}-[0-9]{3}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="pasosType">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[A-Z]{2}[0-9]{3}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:complexType name="PatnikType">
+        <xsd:sequence>
+            <xsd:element name="Ime" type="xsd:string"/>
+            <xsd:element name="Prezime" type="xsd:string"/>
+            <xsd:element name="brPasos" type="pasosType"/>
+            <xsd:element name="ulica" type="xsd:string"/>
+            <xsd:element name="broj" type="xsd:integer"/>
+            <xsd:element name="grad" type="xsd:string"/>
+            <xsd:element name="telefon" type="telefonType"/>
+            <xsd:element name="rezervacija" type="rezervacijaType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="rezervacijaType">
+        <xsd:sequence>
+            <xsd:element name="datum" type="xsd:date"/>
+        </xsd:sequence>
+        <xsd:attribute name="sifra" type="xsd:integer"/>
+    </xsd:complexType>
+    
+    <xsd:group name="vrabInfo">
+        <xsd:sequence>
+            <xsd:element name="ime" type="xsd:string"/>
+            <xsd:element name="prezime" type="xsd:string"/>
+            <xsd:element name="plata" type="xsd:float"/>
+        </xsd:sequence>
+        <xsd:attribute name="sifra" type="xsd:integer"/>
+    </xsd:group>
+    
+    <xsd:complexType name="vrabotenType">
+        <xsd:group ref="vrabInfo"/>
+    </xsd:complexType>
+    
+    <xsd:complexType name="pilotType">
+        <xsd:sequence>
+            <xsd:group ref="vrabInfo"/>
+            <xsd:element name="tipAvion" type="tipAvionType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        
+    </xsd:complexType>
+    
+    <xsd:complexType name="tipAvionType">
+        <xsd:sequence>
+            <xsd:element name="ime" type="xsd:string"/>
+            <xsd:element name="proizvoditel" type="xsd:string"/>
+            <xsd:element name="avion" minOccurs="1" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="brSedista" type="xsd:integer"/>
+                        <xsd:element name="ispravnost" type="xsd:bool"/>
+                    </xsd:sequence>
+                    <xsd:attribute name="seriskiBr" type="xsd:integer"/>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:element name="pilot" type="pilotType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+        <xsd:attribute name="brModel" type="xsd:integer"/>
+    </xsd:complexType>
+    
+    <xsd:element name="Aviokompanija">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="Let" type="LetType" minOccurs="1" maxOccurs="unbounded"/>
+                <xsd:element name="Patnik" type="PatnikType" minOccurs="1" maxOccurs="unbounded"/>
+                <xsd:element name="Vraboten" type="VrabotenType" minOccurs="1" maxOccurs="unbounded"/>
+                <xsd:element name="Pilot" type="pilotType" minOccurs="1" maxOccurs="unbounded"/>
+                <xsd:element name="TipAvion" type="tipAvionType" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+           </xsd:element>
+</xsd:schema>
