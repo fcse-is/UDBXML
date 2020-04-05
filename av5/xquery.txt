@@ -1,0 +1,274 @@
+1.
+a)
+(: prv nacin :)
+let $k:=doc("knigi.xml")//KNIGA[GodIzd>=2005]
+return $k
+
+(: vtor nacin :)
+let $g:=2005
+return  doc("knigi.xml")//KNIGA[GodIzd>=$g]
+
+(: tret nacin :)
+for $k in doc("knigi.xml")//KNIGA[GodIzd>=2005]
+return $k
+
+
+b)
+
+for $k in doc("knigi.xml")//KNIGA
+where $k/@ISBN="1423901134"
+return $k
+
+c)
+
+(: prv nacin :)
+let $k:=doc("knigi.xml")//KNIGA[BrPrim=0]
+return $k
+
+(: vtor nacin :)
+for $k in doc("knigi.xml")//KNIGA
+where $k/BrPrim=0
+return $k
+
+d)
+
+for $k in doc("knigi.xml")//KNIGA
+where $k/Status="vo pecat" and xs:integer($k/BrStr)>=500
+return $k
+
+
+e)
+for $k in doc("knigi.xml")//KNIGA
+where $k/Status="gotovo"
+order by $k/Naslov ascending
+return $k
+
+f)
+let $br:=sum(doc("knigi.xml")//KNIGA/BrStr)
+return 
+<REZULTAT>
+<VKUPNOSTRANI>{$br}</VKUPNOSTRANI>
+</REZULTAT>
+
+
+2.
+a)
+
+let $br:= count(doc("primeroci.xml")//PRIMEROK[@ISBN = "1423901134"])
+return 
+<REZ>
+{$br}
+</REZ>
+
+b)
+
+let $br:= count(doc("primeroci.xml")//PRIMEROK[@ISBN = "1423901134"][Status="iznajmen"])
+return 
+<REZ>
+{$br}
+</REZ>
+
+c)
+
+<KNIGI>
+{for $k in distinct-values(doc("primeroci.xml")//PRIMEROK/@ISBN)
+let $prosek := avg(doc("primeroci.xml")//PRIMEROK[@ISBN=$k]/BrStr)
+return 
+<KNIGA>
+{$k}
+<ProsekStr>{$prosek}</ProsekStr>
+</KNIGA>}
+</KNIGI>
+
+d)
+
+for $k in distinct-values(doc("primeroci.xml")//PRIMEROK/@ISBN)
+let $brPr:=count(doc("primeroci.xml")//PRIMEROK[@ISBN=$k])
+where $brPr>4
+return 
+<KNIGA>
+{$k}
+<brPrimeroci>{$brPr}</brPrimeroci>
+</KNIGA>
+
+e)
+
+<KNIGI>{
+for $k in distinct-values(doc("primeroci.xml")//PRIMEROK/@ISBN)
+let $max:=max(doc("primeroci.xml")//PRIMEROK[@ISBN=$k]/BrStr)
+return
+<KNIGA>
+{$k}
+<MaxBrStr>{$max}</MaxBrStr>
+</KNIGA>
+}</KNIGI>
+
+
+3.
+
+а)
+
+for $k in doc("knigi.xml")//KNIGA
+for $p in distinct-values(doc("primeroci.xml")//PRIMEROK/@ISBN)
+where $k/@ISBN=$p
+return
+<Kniga ISBN="{$k/@ISBN}">
+    {$k/*}
+    <Primeroci>
+        {
+            for $p in doc("primeroci.xml")//PRIMEROK
+            where $p/@ISBN=$k/@ISBN
+            return <BrPr>{$p/@Broj} </BrPr>
+        }
+    </Primeroci>
+</Kniga>
+
+
+
+b)
+
+(: prv nacin :)
+for $k in doc("knigi.xml")//KNIGA,
+$p in distinct-values(doc("primeroci.xml")//PRIMEROK/@ISBN)
+where $k/@ISBN=$p
+return
+<KNPR>
+    {$k/@ISBN}
+    {$k/Naslov}
+    <BrPrimeroci>
+        {count(doc("primeroci.xml")//PRIMEROK[@ISBN=$k/@ISBN])}
+    </BrPrimeroci>
+</KNPR>
+
+(: vtor nacin :)
+for $k in doc("knigi.xml")//KNIGA,
+$p in distinct-values(doc("primeroci.xml")//PRIMEROK/@ISBN)
+where $k/@ISBN=$p
+return
+<KNPR>
+    {$k/@ISBN}
+    {$k/Naslov}
+    <BrPrimeroci>
+        {
+            count(
+                for $pr in doc("primeroci.xml")//PRIMEROK
+                where $pr/@ISBN=$k/@ISBN
+                return $pr
+            )
+        }
+    </BrPrimeroci>
+</KNPR>
+
+c)
+
+(: prv nacin :)
+for $k in doc("knigi.xml")//KNIGA
+let $br:= count(doc("primeroci.xml")//PRIMEROK[@ISBN=$k/@ISBN])
+where $br=0 and $k/GodIzd>=2003
+return $k/Naslov
+
+(: vtor nacin :)
+for $k in doc("knigi.xml")//KNIGA
+let $isbns:=doc("primeroci.xml")//PRIMEROK/@ISBN
+where every $isbn in $isbns satisfies $isbn ne $k/@ISBN
+return $k/Naslov
+
+
+d)
+
+let $br:=count(for $k in doc("knigi.xml")//KNIGA
+where $k/BrStr>500 and starts-with($k/Naslov,"Introduction")
+return $k)
+return <Rez>{$br}</Rez>
+
+4)
+
+a)
+
+for $kl in doc("klienti.xml")//Klient
+where ends-with($kl/Adresa,'gmail.com')
+order by substring($kl//Prezime,1,3)
+return $kl
+
+
+b)
+
+for $kl in doc("klienti.xml")//Klient
+return 
+<Klient>
+    {$kl/@klientID}
+    {
+        for $pr in doc("proekti.xml")//Proekt[@klientREF = $kl/@klientID]
+        let $vk:=sum($pr/RabSaati[year-from-date(datum)=2010 and month-from-date=3]/brSaati)
+        return <Proekt>
+            {$pr/@ID}
+            <BrSaati>{$vk}</BrSaati>
+        </Proekt>
+    }
+</Klient>
+
+
+c)
+
+let $br:=count(distinct-values(let $pl:=doc("plakjanja.xml")//Plakjanje
+let $k:=doc("plakjanja.xml")//SoKreditna
+where $k/@plakjanjeREF=$pl/@plakjanjeID
+return $pl/@proektID))
+return $br
+
+
+(: bonus primer :)
+for $k in doc("klienti.xml")//Klient
+return <Klient>
+    {$k//Ime}
+    <Proekt>
+    {
+        for $pr in doc("proekti.xml")//Proekt
+        return count(
+            for $pl in doc("plakjanja.xml")//Plakjanje
+            let $kr:=doc("plakjanja.xml")//SoKreditna
+            where $pl/@plakjanjeID=$kr/@plakjanjeREF 
+            and $pl/@proektID=$pr/@proektID
+            return $pl
+        )
+    }
+    </Proekt>
+</Klient>
+
+
+
+d)
+
+
+declare function local:platenSpisok($mesec as xs:integer,$godina as xs:integer) as element()*
+{
+    <PlatenSpisok godina='{$godina}' mesec='{$mesec}'>
+        {
+            for $inz at $i in doc("vraboteni.xml")//Inzeneri
+            let $vkupnoSaati:= sum(
+                for $rs in doc("proekti.xml")//RabSaati
+                where $rs/@vrabotenREF=$inz/@vrabotenID 
+                    and year-from-date($rs/datum) = $godina
+                    and month-from-date($rs/datum) = $mesec
+                return $rs/BrSaati
+            )
+            let $tarifa:= if($inz/Tarifa = "prva") then 1
+                else if ($inz/Tarifa = "vtora") then 2
+                else if($inz/Tarifa = "treta") then 3
+                else 4
+            let $vkupno:=$vkupnoSaati * $tarifa
+            return
+                <Plata redenBroj='{$i}'>
+                    <Vraboten>
+                        {$inz/* except $inz/Tarifa}
+                    </Vraboten>
+                    <VkupnoSaati>{$vkupnoSaati}</VkupnoSaati>
+                    {$inz/Tarifa}
+                    <Vkupno>{$vkupno}</Vkupno>
+                </Plata>
+        }
+        
+    </PlatenSpisok>
+};
+
+
