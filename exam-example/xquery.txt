@@ -1,0 +1,45 @@
+1.
+for $k in doc("korisnici.xml")//Korisnik
+return <Korisnik>
+{$k}
+<Suma>{sum(
+    for $n in doc("prodavnica.xml")//Naracka
+    for $np in $n/narackaProizvod
+    let $p:=doc("prodavnica.xml")//Proizvod[@sifra=$np/@proizvodREF]
+    where $n/@korisnikREF = $k/@kID and year-from-date($n/datum) = 2016 and month-from-date($n/datum) = 3
+    return $np/kolicina * $p/cena)
+}</Suma>
+</Korisnik>
+
+2.
+for $k in doc("korisnik.xml")//Korisnik
+let $maxPati:= max(for $p in doc("prodavnica.xml")//Proizvod[Kategorija/ime="Ubavina i zdravje"]
+				return count($k/ProizvodKK[@proizvodREF=$p/sifra]))
+let $maxProizvod := doc("prodavnica.xml")//Proizvod[count($k/ProizvodKK)[@proizvodREF=sifra] = $maxPati]
+let $minCena:=min($maxProizvod/cena)
+let $minP:=$maxProizvod[cena=$minCena]
+return $minP
+
+
+3.
+declare function local:prodazba($mesec as xs:integer, $godina as xs:integer) as element()*
+{
+    <Izveshtaj mesec="{$mesec}" godina="{$godina}">
+    {
+        for $p at $i in doc("prodavnica.xml")//Proizvod
+        let $vkupnaKolicina:=sum(doc("prodavnica.xml")//Naracka/narackaProizvod[@proizvodREF=$p/@sifra]/kolicina)
+        let $vkupnaCena:=$vkupnaKolicina * $p/cena
+        return
+            <Proizvod redenBroj="{$i}">
+                {$p/ime}
+                {
+                    for $n in doc("prodavnica.xml")//Naracka
+                    where $n/narackaProizvod/@proizvodREF=$p/@sifra
+                    return <Naracka sifra="{$n/@sifra}"/>
+                }
+                <VkupnaKolicina>{$vkupnaKolicina}</VkupnaKolicina>
+                <VkCena>{$vkupnaCena}</VkCena>
+            </Proizvod>
+    }
+    </Izveshtaj>
+}

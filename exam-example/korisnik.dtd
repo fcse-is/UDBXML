@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ELEMENT KORISNICI (Korisnik)* >
+<!ELEMENT Korisnik ((KorisnickoIme,Lozinka,Telefoni) | (Najava,korisnikBr?) | (Najava,Telefon+))>
+<!ELEMENT Najava (KorisnickoIme,Lozinka,(Telefoni | Telefon*)?)>
+<!ELEMENT KorisnickoIme (#PCDATA) >
+<!ELEMENT Lozinka (#PCDATA) >
+...
+
+<!ATTLIST Korisnik korisnikBr ID #IMPLIED >
+
+^[a-zA-Z0-9]*(?=[0-9])[a-zA-Z0-9]*

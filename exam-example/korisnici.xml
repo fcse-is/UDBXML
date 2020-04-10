@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    
+    <xsd:simpleType name="lozinkaType">
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="8"/>
+            <xsd:pattern value="(?=[A-Z\d!@#$%]*[A-Z])(?=[A-Z\d!@#$%]*\d)(?=[A-Z\d!@#$%]*[!@#$%])[A-Z\d!@#$%]*"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:complexType name="najavaType">
+        <xsd:sequence>
+            <xsd:element name="k_ime" type="xsd:string"/>
+            <xsd:element name="lozinka" type="lozinkaType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:complexType name="korisnikType">
+        <xsd:sequence>
+            <xsd:element name="najava" type="najavaType"/>
+            <xsd:element name="telefon" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+            
+            <xsd:element name="proizvodKK" minOccurs="0" maxOccurs="100">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="kolicina" type="xsd:integer"/>
+                        <xsd:element name="datum" type="xsd:date"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+                <xsd:attribute name="proizvodREF" type="xsd:integer"/>
+            </xsd:element>
+            
+        </xsd:sequence>
+        
+        <xsd:attribute name="kID" type="xsd:integer"/>
+    </xsd:complexType>
+    <xsd:element name="Korisnici">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="Korisnik" type="korisnikType" minOccurs="1" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>
